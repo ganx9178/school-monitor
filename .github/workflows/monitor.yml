@@ -1,0 +1,23 @@
+name: 学校动态监控
+
+on:
+  schedule:
+    # 每天 01:30 UTC = 北京 09:30
+    - cron: "30 1 * * *"
+    # 每天 08:30 UTC = 北京 16:30
+    - cron: "30 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python monitor.py
+        env:
+          FEISHU_SECRET: ${{ secrets.FEISHU_SECRET }}
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
